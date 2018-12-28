@@ -76,7 +76,7 @@ chercher le **plugin** dans l'onglet *disponible*
 
 ## configuration globale des outils<a id="sec-2-3" name="sec-2-3"></a>
 
--   jdk &#x2013;> nécessite la crétion d'un compte oracle
+-   jdk &#x2013;> nécessite la création d'un compte oracle
 
 # jobs<a id="sec-3" name="sec-3"></a>
 
@@ -86,4 +86,4 @@ pipeline
 -   *sauver*
 -   *back to dashboard*
 -   *sélectionner un projet*
--   pipeline syntax
+  pipeline syntax
