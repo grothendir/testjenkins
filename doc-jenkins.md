@@ -117,7 +117,7 @@ aller dans *configure*, onglet *Advanced Project Options*, et (modifer/)coller l
 
 ## pipeline-syntax<a id="sec-3-2" name="sec-3-2"></a>
 
-+créer un nouveau projet test2
+-   créer un nouveau projet test2
 -   aller dans *pipeline syntax*
 -   générer le *pipeline script* avec l'URL git du projet
 
@@ -136,6 +136,5 @@ dans configure, onglet *Advanced Project Options*, écrire le script
             }
             step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'])
             step([$class: 'JUnitResultArchiver', testResults: 'target/failsafe-reports/*.xml'])
-    
         }
     }
