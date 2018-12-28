@@ -1,0 +1,70 @@
+cf [[https://linuxize.com/post/how-to-install-jenkins-on-centos-7/][documentation]]
+* installation
+** installer java
+#+BEGIN_SRC sh
+$ sudo yum install java
+#+END_SRC
+vérifer la version:
+#+BEGIN_SRC sh
+$ java-version
+#+END_SRC
+
+** installer jenkins
+#+BEGIN_SRC sh
+$ curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ sudo yum install jenkins
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ sudo systemctl start jenkins
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ sudo systemctl status jenkins
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ sudo systemctl enable jenkins
+#+END_SRC
+
+** configurer le firewall
+#+BEGIN_SRC sh
+sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp
+#+END_SRC
+
+#+BEGIN_SRC sh
+sudo firewall-cmd --reload
+#+END_SRC
+
+** setting up jenkins
+
+* administration
+** plugins
+#+BEGIN_SRC html
+http://<server_ip>/pluginManager/
+#+END_SRC
+#+BEGIN_SRC html
+http://54.38.180.120:8080/pluginManager/
+#+END_SRC 
+
+exemples: chercher /python/ et /php/, /wordpress/, /ruby/, etc
+
+** installer pipeline maven integration
+chercher le *plugin* dans l'onglet /disponible/
+
+** configuration globale des outils
++ jdk --> nécessite la crétion d'un compte oracle
+* jobs
+** créer un nouveau job
+pipeline
++ /sauver/
++ /back to dashboard/
++ /sélectionner un projet/
+- pipeline syntax
