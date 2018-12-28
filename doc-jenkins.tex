@@ -1,0 +1,124 @@
+% Created 2018-12-28 ven. 13:43
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\author{ulysse}
+\date{\today}
+\title{doc-jenkins}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 25.2.2 (Org mode 8.2.10)}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+cf \href{https://linuxize.com/post/how-to-install-jenkins-on-centos-7/}{documentation}
+\section{installation}
+\label{sec-1}
+\subsection{installer java}
+\label{sec-1-1}
+\begin{verbatim}
+$ sudo yum install java
+\end{verbatim}
+vérifer la version:
+\begin{verbatim}
+$ java -version
+\end{verbatim}
+sortie standard:
+\begin{verbatim}
+openjdk version "1.8.0_191"
+OpenJDK Runtime Environment (build 1.8.0_191-b12)
+OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
+\end{verbatim}
+\subsection{installer jenkins}
+\label{sec-1-2}
+\begin{verbatim}
+$ curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
+\end{verbatim}
+
+\begin{verbatim}
+$ sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+\end{verbatim}
+
+\begin{verbatim}
+$ sudo yum install jenkins
+\end{verbatim}
+
+\begin{verbatim}
+$ sudo systemctl start jenkins
+\end{verbatim}
+
+\begin{verbatim}
+$ sudo systemctl status jenkins
+\end{verbatim}
+
+\begin{verbatim}
+$ sudo systemctl enable jenkins
+\end{verbatim}
+
+\subsection{configurer le firewall}
+\label{sec-1-3}
+\begin{verbatim}
+sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp
+\end{verbatim}
+
+\begin{verbatim}
+sudo firewall-cmd --reload
+\end{verbatim}
+
+\subsection{setting up jenkins}
+\label{sec-1-4}
+
+\section{administration}
+\label{sec-2}
+\subsection{plugins}
+\label{sec-2-1}
+\begin{verbatim}
+http://<server_ip>:8080/pluginManager/
+\end{verbatim}
+où <server$_{\text{ip}}$> est l'adresse de votre serveur jenkins
+
+\begin{verbatim}
+http://54.38.180.120:8080/pluginManager/
+\end{verbatim}
+
+exemples: chercher \emph{python} et \emph{php}, \emph{wordpress}, \emph{ruby}, etc
+
+\subsection{installer pipeline maven integration}
+\label{sec-2-2}
+chercher le \textbf{plugin} dans l'onglet \emph{disponible}
+
+\subsection{configuration globale des outils}
+\label{sec-2-3}
+\begin{itemize}
+\item jdk --> nécessite la crétion d'un compte oracle
+\end{itemize}
+\section{jobs}
+\label{sec-3}
+\subsection{créer un nouveau job}
+\label{sec-3-1}
+pipeline
+\begin{itemize}
+\item \emph{sauver}
+\item \emph{back to dashboard}
+\item \emph{sélectionner un projet}
+\item pipeline syntax
+\end{itemize}
+% Emacs 25.2.2 (Org mode 8.2.10)
+\end{document}
