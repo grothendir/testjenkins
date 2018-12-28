@@ -1,44 +1,44 @@
 cf [[https://linuxize.com/post/how-to-install-jenkins-on-centos-7/][documentation]]
 * installation
 ** installer java
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
 $ sudo yum install java
-#+END_SRC
-vérifer la version:
-#+BEGIN_SRC sh
+   #+END_SRC
+   vérifer la version:
+   #+BEGIN_SRC sh
 $ java -version
-#+END_SRC
-sortie standard:
-#+BEGIN_SRC sh
+   #+END_SRC
+   sortie standard:
+   #+BEGIN_SRC sh
 openjdk version "1.8.0_191"
 OpenJDK Runtime Environment (build 1.8.0_191-b12)
 OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
-#+END_SRC
+   #+END_SRC
 ** installer jenkins
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
 $ curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
-#+END_SRC
-
-#+BEGIN_SRC sh
+   #+END_SRC
+   
+   #+BEGIN_SRC sh
 $ sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
-#+END_SRC
-
-#+BEGIN_SRC sh
+   #+END_SRC
+   
+   #+BEGIN_SRC sh
 $ sudo yum install jenkins
-#+END_SRC
-
-#+BEGIN_SRC sh
+   #+END_SRC
+   
+   #+BEGIN_SRC sh
 $ sudo systemctl start jenkins
-#+END_SRC
-
-#+BEGIN_SRC sh
+   #+END_SRC
+   
+   #+BEGIN_SRC sh
 $ sudo systemctl status jenkins
-#+END_SRC
-
-#+BEGIN_SRC sh
+   #+END_SRC
+   
+   #+BEGIN_SRC sh
 $ sudo systemctl enable jenkins
-#+END_SRC
-
+   #+END_SRC
+   
 ** configurer le firewall
 #+BEGIN_SRC sh
 sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp
@@ -52,17 +52,17 @@ sudo firewall-cmd --reload
 
 * administration
 ** plugins
-#+BEGIN_SRC html
+   #+BEGIN_SRC html
 http://<server_ip>:8080/pluginManager/
-#+END_SRC
-où <server_ip> est l'adresse de votre serveur jenkins
-
-#+BEGIN_SRC html
+   #+END_SRC
+   où <server_ip> est l'adresse de votre serveur jenkins
+   
+   #+BEGIN_SRC html
 http://54.38.180.120:8080/pluginManager/
-#+END_SRC 
-
-exemples: chercher /python/ et /php/, /wordpress/, /ruby/, etc
-
+   #+END_SRC 
+   
+   exemples: chercher /python/ et /php/, /wordpress/, /ruby/, etc
+   
 ** installer pipeline maven integration
 chercher le *plugin* dans l'onglet /disponible/
 
@@ -70,8 +70,53 @@ chercher le *plugin* dans l'onglet /disponible/
 + jdk --> nécessite la crétion d'un compte oracle
 * jobs
 ** créer un nouveau job
-pipeline
+   pipeline
 + /sauver/
 + /back to dashboard/
 + /sélectionner un projet/
 - pipeline syntax
+  
+[[https://jenkins.io/doc/book/pipeline/][online doc]] section "Scripted Pipeline fundamentals"
+copier (et modifier) l'exemple:
+#+BEGIN_SRC groovy
+node {  
+    stage('Build') { 
+       echo('helloooo oueurld!')
+       sh 'pwd'
+    }
+    stage('Test') { 
+        // 
+    }
+    stage('Deploy') { 
+        // 
+    }
+}
+#+END_SRC
+
+aller dans /configure/, onglet /Advanced Project Options/, et (modifer/)coller le *Pipeline script*: 
+
+** pipeline-syntax
++créer un nouveau projet test2
++ aller dans /pipeline syntax/
++ générer le /pipeline script/ avec l'URL git du projet
+dans configure, onglet /Advanced Project Options/, écrire le script 
++ lancer le *build*
++ regarder les logs
+
+#+BEGIN_SRC groovy
+node {
+    stage('Checkout') {
+        git branch: 'develop',url: 'https://github.com/virtus1er/ajc-jenkins.git'
+    }
+    
+    stage('build') {
+        withMaven( maven: 'mav', jdk: 'jdk8') {
+            sh "mvn clean verify"
+        }
+        step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'])
+	step([$class: 'JUnitResultArchiver', testResults: 'target/failsafe-reports/*.xml'])
+	
+    }
+}
+#+END_SRC
+

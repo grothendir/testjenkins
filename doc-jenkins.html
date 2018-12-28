@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>doc-jenkins</title>
-<!-- 2018-12-28 ven. 12:57 -->
+<!-- 2018-12-28 ven. 16:29 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="ulysse" />
@@ -160,6 +160,7 @@ for the JavaScript code in this tag.
 <li><a href="#sec-3">3. jobs</a>
 <ul>
 <li><a href="#sec-3-1">3.1. créer un nouveau job</a></li>
+<li><a href="#sec-3-2">3.2. pipeline-syntax</a></li>
 </ul>
 </li>
 </ul>
@@ -184,12 +185,21 @@ vérifer la version:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">$ java-version
+<pre class="src src-sh">$ java -version
+</pre>
+</div>
+<p>
+sortie standard:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">openjdk version <span style="color: #ffff00;">"1.8.0_191"</span>
+OpenJDK Runtime Environment (build 1.8.0_191-b12)
+OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-sec-1-2" class="outline-3">
 <h3 id="sec-1-2"><span class="section-number-3">1.2</span> installer jenkins</h3>
 <div class="outline-text-3" id="text-1-2">
@@ -261,9 +271,13 @@ vérifer la version:
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 
-<pre class="src src-html">http://&lt;<span style="color: #a020f0; font-weight: bold;">server_ip</span>&gt;/pluginManager/
+<pre class="src src-html">http://&lt;<span style="color: #a020f0; font-weight: bold;">server_ip</span>&gt;:8080/pluginManager/
 </pre>
 </div>
+<p>
+où &lt;server<sub>ip</sub>&gt; est l'adresse de votre serveur jenkins
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-html">http://54.38.180.120:8080/pluginManager/
@@ -314,13 +328,81 @@ pipeline
 <li>pipeline syntax
 </li>
 </ul>
+
+<p>
+<a href="https://jenkins.io/doc/book/pipeline/">online doc</a> section "Scripted Pipeline fundamentals"
+copier (et modifier) l'exemple:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-groovy">node {  
+    stage(<span style="color: #ffff00;">'Build'</span>) { 
+       echo(<span style="color: #ffff00;">'helloooo oueurld!'</span>)
+       sh <span style="color: #ffff00;">'pwd'</span>
+    }
+    stage(<span style="color: #ffff00;">'Test'</span>) { 
+        <span style="color: #00ff00;">// </span>
+    }
+    stage(<span style="color: #ffff00;">'Deploy'</span>) { 
+        <span style="color: #00ff00;">// </span>
+    }
+}
+</pre>
+</div>
+
+<p>
+aller dans <i>configure</i>, onglet <i>Advanced Project Options</i>, et (modifer/)coller le <b>Pipeline script</b>: 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> pipeline-syntax</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
++créer un nouveau projet test2
+</p>
+<ul class="org-ul">
+<li>aller dans <i>pipeline syntax</i>
+</li>
+<li>générer le <i>pipeline script</i> avec l'URL git du projet
+</li>
+</ul>
+<p>
+dans configure, onglet <i>Advanced Project Options</i>, écrire le script 
+</p>
+<ul class="org-ul">
+<li>lancer le <b>build</b>
+</li>
+<li>regarder les logs
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-groovy">node {
+    stage(<span style="color: #ffff00;">'Checkout'</span>) {
+        git branch: <span style="color: #ffff00;">'develop'</span>,url: <span style="color: #ffff00;">'https://github.com/virtus1er/ajc-jenkins.git'</span>
+    }
+
+    stage(<span style="color: #ffff00;">'build'</span>) {
+        withMaven( maven: <span style="color: #ffff00;">'mav'</span>, jdk: <span style="color: #ffff00;">'jdk8'</span>) {
+            sh <span style="color: #ffff00;">"mvn clean verify"</span>
+        }
+        step([$class: <span style="color: #ffff00;">'JUnitResultArchiver'</span>, testResults: <span style="color: #ffff00;">'target/surefire-reports/*.xml'</span>])
+        step([$class: <span style="color: #ffff00;">'JUnitResultArchiver'</span>, testResults: <span style="color: #ffff00;">'target/failsafe-reports/*.xml'</span>])
+
+    }
+}
+</pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: ulysse</p>
-<p class="date">Created: 2018-12-28 ven. 12:57</p>
+<p class="date">Created: 2018-12-28 ven. 16:29</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

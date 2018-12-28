@@ -20,6 +20,7 @@
 <li><a href="#sec-3">3. jobs</a>
 <ul>
 <li><a href="#sec-3-1">3.1. créer un nouveau job</a></li>
+<li><a href="#sec-3-2">3.2. pipeline-syntax</a></li>
 </ul>
 </li>
 </ul>
@@ -36,7 +37,13 @@ cf [documentation](https://linuxize.com/post/how-to-install-jenkins-on-centos-7/
 
 vérifer la version:
 
-    $ java-version
+    $ java -version
+
+sortie standard:
+
+    openjdk version "1.8.0_191"
+    OpenJDK Runtime Environment (build 1.8.0_191-b12)
+    OpenJDK 64-Bit Server VM (build 25.191-b12, mixed mode)
 
 ## installer jenkins<a id="sec-1-2" name="sec-1-2"></a>
 
@@ -64,7 +71,9 @@ vérifer la version:
 
 ## plugins<a id="sec-2-1" name="sec-2-1"></a>
 
-    http://<server_ip>/pluginManager/
+    http://<server_ip>:8080/pluginManager/
+
+où <server<sub>ip</sub>> est l'adresse de votre serveur jenkins
 
     http://54.38.180.120:8080/pluginManager/
 
@@ -76,7 +85,7 @@ chercher le **plugin** dans l'onglet *disponible*
 
 ## configuration globale des outils<a id="sec-2-3" name="sec-2-3"></a>
 
--   jdk &#x2013;> nécessite la création d'un compte oracle
+-   jdk &#x2013;> nécessite la crétion d'un compte oracle
 
 # jobs<a id="sec-3" name="sec-3"></a>
 
@@ -86,4 +95,47 @@ pipeline
 -   *sauver*
 -   *back to dashboard*
 -   *sélectionner un projet*
-  pipeline syntax
+-   pipeline syntax
+
+[online doc](https://jenkins.io/doc/book/pipeline/) section "Scripted Pipeline fundamentals"
+copier (et modifier) l'exemple:
+
+    node {  
+        stage('Build') { 
+           echo('helloooo oueurld!')
+           sh 'pwd'
+        }
+        stage('Test') { 
+            // 
+        }
+        stage('Deploy') { 
+            // 
+        }
+    }
+
+aller dans *configure*, onglet *Advanced Project Options*, et (modifer/)coller le **Pipeline script**: 
+
+## pipeline-syntax<a id="sec-3-2" name="sec-3-2"></a>
+
++créer un nouveau projet test2
+-   aller dans *pipeline syntax*
+-   générer le *pipeline script* avec l'URL git du projet
+
+dans configure, onglet *Advanced Project Options*, écrire le script 
+-   lancer le **build**
+-   regarder les logs
+
+    node {
+        stage('Checkout') {
+            git branch: 'develop',url: 'https://github.com/virtus1er/ajc-jenkins.git'
+        }
+    
+        stage('build') {
+            withMaven( maven: 'mav', jdk: 'jdk8') {
+                sh "mvn clean verify"
+            }
+            step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'])
+            step([$class: 'JUnitResultArchiver', testResults: 'target/failsafe-reports/*.xml'])
+    
+        }
+    }
