@@ -2,7 +2,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. installation</a>
+<li><a href="#sec-1">1. installation sur centos</a>
 <ul>
 <li><a href="#sec-1-1">1.1. installer java</a></li>
 <li><a href="#sec-1-2">1.2. installer jenkins</a></li>
@@ -29,7 +29,7 @@
 
 cf [documentation](https://linuxize.com/post/how-to-install-jenkins-on-centos-7/)
 
-# installation<a id="sec-1" name="sec-1"></a>
+# installation sur centos<a id="sec-1" name="sec-1"></a>
 
 ## installer java<a id="sec-1-1" name="sec-1-1"></a>
 
