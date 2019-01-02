@@ -61,9 +61,9 @@ sortie standard:
 
 ## configurer le firewall<a id="sec-1-3" name="sec-1-3"></a>
 
-    sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp
+    $ sudo firewall-cmd --permanent --zone=public --add-port=8080/tcp
 
-    sudo firewall-cmd --reload
+    $ sudo firewall-cmd --reload
 
 ## setting up jenkins<a id="sec-1-4" name="sec-1-4"></a>
 
@@ -136,5 +136,9 @@ dans configure, onglet *Advanced Project Options*, écrire le script
             }
             step([$class: 'JUnitResultArchiver', testResults: 'target/surefire-reports/*.xml'])
             step([$class: 'JUnitResultArchiver', testResults: 'target/failsafe-reports/*.xml'])
+            dir('target') {
+                archive '*.jar'
+            }
+            stash name: 'binary', includes: 'target/*.jar'
         }
     }
